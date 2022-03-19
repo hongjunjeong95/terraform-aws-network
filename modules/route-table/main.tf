@@ -123,11 +123,12 @@ resource "aws_route_table_association" "gateways" {
 # VPC Gateway Endpoint Association
 ###################################################
 
+# INFO: Conflict on create with `for_each`
 resource "aws_vpc_endpoint_route_table_association" "this" {
-  for_each = toset(var.vpc_gateway_endpoints)
+  count = length(var.vpc_gateway_endpoints)
 
   route_table_id  = aws_route_table.this.id
-  vpc_endpoint_id = each.value
+  vpc_endpoint_id = var.vpc_gateway_endpoints[count.index]
 }
 
 
